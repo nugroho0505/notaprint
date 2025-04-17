@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nota Transaksi</title>
+  <style>
+    body { font-family: Arial; width: 80mm; margin: auto; }
+    .nota { border: 1px solid #ccc; padding: 16px; }
+    h2 { text-align: center; margin-bottom: 10px; }
+    .info, .footer { font-size: 14px; }
+    .items { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .items th, .items td { border-bottom: 1px dashed #ccc; padding: 4px; font-size: 14px; }
+    .total { text-align: right; font-size: 16px; font-weight: bold; margin-top: 10px; }
+    .footer { text-align: center; font-size: 12px; margin-top: 20px; }
+  </style>
+</head>
+<body onload="window.print()">
+  <div class="nota">
+    <h2>TOKO MAJU JAYA</h2>
+    <div class="info">
+      No. Nota: <strong id="nota"></strong><br />
+      Tanggal: <strong id="tgl"></strong><br />
+      Pelanggan: <strong id="nama"></strong>
+    </div>
+
+    <table class="items">
+      <thead>
+        <tr><th>Item</th><th>Qty</th><th>Harga</th><th>Total</th></tr>
+      </thead>
+      <tbody id="itemList"></tbody>
+    </table>
+
+    <div class="total" id="grandTotal"></div>
+    <div class="footer">Terima kasih telah berbelanja!</div>
+  </div>
+
+  <script>
+    const q = new URLSearchParams(window.location.search);
+    document.getElementById("nota").textContent = q.get("nota");
+    document.getElementById("tgl").textContent = q.get("tgl");
+    document.getElementById("nama").textContent = q.get("nama");
+    document.getElementById("grandTotal").textContent = "Total: Rp " + q.get("total");
+
+    const items = JSON.parse(decodeURIComponent(q.get("items")));
+    const tbody = document.getElementById("itemList");
+    items.forEach(item => {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${item.nama}</td><td>${item.qty}</td><td>${item.harga}</td><td>${item.total}</td>`;
+      tbody.appendChild(row);
+    });
+  </script>
+</body>
+</html>
